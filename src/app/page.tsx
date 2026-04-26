@@ -1,11 +1,16 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <main className="min-h-screen flex justify-center">
-      <div className="w-full max-w-sm min-h-screen">
-        <h1 className="text-center mt-10 text-black">marumemo</h1>
-      </div>
-    </main>
+    <>
+    <div className="flex flex-col items-center justify-start h-full">
+      <h1 className="text-center my-40 text-[40px] tracking-[30%]">marumemo</h1>
+      <button className="w-46.25 h-20 justify-center
+        bg-(--secondary) active:bg-(--primary) 
+      text-white text-[25px] 
+        border-2 border-solid border-(--primary) rounded-[10px] ">
+          create
+      </button>
+    </div>
+      
+    </>
   );
 }
