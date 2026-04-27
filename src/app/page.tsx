@@ -3,11 +3,16 @@
 
 import { useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
+import { useState } from "react";
 
 export default function Home() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   async function createMachine() {
+    if (loading) return;
+    setLoading(true);
+
     const id = crypto.randomUUID();
 
     const newMachine = {
@@ -34,12 +39,17 @@ export default function Home() {
       </div>
 
       {/* create button */}
-      <button className="w-46.25 h-20 gjustify-center
-        bg-(--secondary) active:bg-(--primary) 
-      text-white text-[25px] 
-        border-2 border-solid border-(--primary) rounded-[10px]"
-        onClick={createMachine}>
-          create
+      <button
+        onClick={createMachine}
+        disabled={loading}
+        className="w-46.25 h-20
+          bg-(--secondary) active:bg-(--primary) active:scale-95
+          text-white text-[25px]
+          border-2 border-solid border-(--primary) rounded-[10px]
+          transition-all duration-100 touch-manipulation
+          disabled:opacity-50 cursor-pointer"
+      >
+        {loading ? "creating..." : "create"}
       </button>
     </main>
       
