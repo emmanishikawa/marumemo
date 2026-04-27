@@ -48,13 +48,13 @@ body {
   border-radius: 999px;
   background: linear-gradient(
     to right,
-    red,
-    yellow,
-    lime,
-    cyan,
-    blue,
-    magenta,
-    red
+    rgb(229, 120, 120),
+    rgb(247, 227, 101),
+    rgb(133, 219, 137),
+    rgb(134, 248, 248),
+    rgb(56, 71, 145),
+    rgb(229, 157, 247),
+    rgb(229, 120, 120)
   );
 }
 
@@ -63,13 +63,13 @@ body {
   border-radius: 999px;
   background: linear-gradient(
     to right,
-    red,
-    yellow,
-    lime,
-    cyan,
-    blue,
-    magenta,
-    red
+  rgb(229, 120, 120),
+    rgb(247, 227, 101),
+    rgb(133, 219, 137),
+    rgb(134, 248, 248),
+    rgb(56, 71, 145),
+    rgb(229, 157, 247),
+    rgb(229, 120, 120)
   );
 }
 
