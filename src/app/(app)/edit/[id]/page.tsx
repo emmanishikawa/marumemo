@@ -89,7 +89,7 @@ export default function EditPage() {
 
   const updated = {
     ...machine,
-    isFinalized: true,
+    isFinalized: false,
   };
 
   console.log("1. Saving machine:", updated);
@@ -97,14 +97,14 @@ export default function EditPage() {
   const { data, error } = await supabase.from("machines").upsert({
     id: updated.id,
     data: updated,
-    is_finalized: true,
+    is_finalized: false,
   });
 
   console.log("2. Supabase upsert result:", { data, error });
 
   if (error) {
     console.error("SAVE FAILED:", error);
-    return; // don't redirect if save failed
+    return;
   }
 
   router.push(`/preview/${updated.id}`);
