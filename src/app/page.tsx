@@ -2,9 +2,28 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { supabase } from "../lib/supabase";
 
 export default function Home() {
   const router = useRouter();
+
+  async function createMachine() {
+    const id = crypto.randomUUID();
+
+    const newMachine = {
+      id,
+      data: {
+        id,
+        capsules: [],
+        isFinalized: false,
+      },
+      is_finalized: false,
+    };
+
+    await supabase.from("machines").insert(newMachine);
+
+    router.push(`/edit/${id}`);
+  }
   return (
     <>
     <main className="flex flex-col items-center justify-start h-full">
@@ -19,7 +38,7 @@ export default function Home() {
         bg-(--secondary) active:bg-(--primary) 
       text-white text-[25px] 
         border-2 border-solid border-(--primary) rounded-[10px]"
-        onClick={() => router.push("/edit")}>
+        onClick={createMachine}>
           create
       </button>
     </main>

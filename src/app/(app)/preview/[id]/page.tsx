@@ -1,9 +1,10 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import type { Machine } from "@/src/types/machine";
 import { useRouter } from "next/navigation";
 import { Capsule } from "@/src/types/capsule";
+import { useParams } from "next/navigation";
+import { supabase } from "@/src/lib/supabase";
 
 export default function PreviewPage() {
     const [machine, setMachine] = useState<Machine | null>(null);
@@ -13,12 +14,37 @@ export default function PreviewPage() {
     const [current, setCurrent] = useState<Capsule | null>(null);
 
     
+    const params = useParams();
+    const id = Array.isArray(params.id) ? params.id[0] : params.id;
+
     useEffect(() => {
-    const data = localStorage.getItem("machine");
-    if (data) {
-        setMachine(JSON.parse(data));
-    }
-    }, []);
+    async function load() {
+  if (!id) return;
+
+  console.log("3. Loading machine with id:", id);
+
+  const { data, error } = await supabase
+    .from("machines")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  console.log("4. Raw Supabase row:", data);
+  console.log("5. data.data (machine object):", data?.data);
+  console.log("6. Error if any:", error);
+
+  if (error) {
+    console.error("LOAD ERROR:", error);
+    return;
+  }
+
+  if (data?.data) {
+    setMachine(data.data);
+  }
+}
+
+    load();
+    }, [id]);
 
     useEffect(() => {
     if (machine) {
@@ -50,8 +76,8 @@ export default function PreviewPage() {
     <div>
         <h1>Preview Mode</h1>
 
-        <button onClick={() => router.push("/edit")}>
-        Back to Edit
+        <button onClick={() => router.push("/edit/${id}")}>
+            Back to Edit
         </button>
 
         
