@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import type { Capsule } from "@/src/types/capsule";
 import Canvas from "./Canvas";
 
@@ -64,8 +64,6 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
 
                 <h2 className="text-xl mb-4">Edit Capsule</h2>
 
-                <p>Capsule ID: {capsule.id}</p>
-
                 {step === 1 && (
                 <div>
                     <p>Step 1: Draw Trinket</p>
@@ -101,7 +99,6 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
                             {images.map(img => (
                                 <div key={img.id}>
                                     <img src={img.url} />
-
                                     <input
                                     value={img.caption || ""}
                                     onChange={(e) =>
@@ -114,7 +111,6 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
                                         )
                                     }
                                     />
-
                                     <button
                                     onClick={() =>
                                         setImages(prev =>
@@ -125,8 +121,7 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
                                     delete
                                     </button>
                                 </div>
-                                
-                                ))}
+                            ))}
                         </div>
                         <button onClick={() => setStep(1)}>
                             Back
@@ -148,8 +143,4 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
         </div>
         
     );
-}
-
-function onSave(arg0: { drawing: string; images: { id: string; url: string; caption?: string; }[]; id: string; trinket: string; }) {
-    throw new Error("Function not implemented.");
 }
