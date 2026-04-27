@@ -76,13 +76,16 @@ export default function PreviewPage() {
     <div>
         <h1>Preview Mode</h1>
 
-        <button onClick={() => router.push("/edit/${id}")}>
+        <button onClick={() => router.push(`/edit/${id}`)}>
             Back to Edit
         </button>
-
-        
+ 
         <button onClick={pullCapsule}>
             Pull Capsule
+        </button>
+
+        <button>
+            Finish
         </button>
 
         {current && (
