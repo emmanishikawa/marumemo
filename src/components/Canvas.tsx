@@ -19,7 +19,7 @@ export default function Canvas({
   const isDrawing = useRef(false);
 
   const [hue, setHue] = useState(0);
-  const color = `hsl(${hue}, 100%, 40%)`;
+  const color = `hsl(${hue}, 75%, 75%)`;
 
   const history = useRef<ImageData[]>([]);
 
