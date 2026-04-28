@@ -43,9 +43,9 @@ export default function Home() {
         onClick={createMachine}
         disabled={loading}
         className="w-46.25 h-20
-          bg-(--secondary) active:bg-(--primary) active:scale-95
+          bg-(--primary) active:bg-(--secondary) active:scale-95
           text-white text-[25px]
-          border-2 border-solid border-(--primary) rounded-[10px]
+          rounded-[10px]
           transition-all duration-100 touch-manipulation
           disabled:opacity-50 cursor-pointer"
       >

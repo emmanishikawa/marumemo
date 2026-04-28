@@ -7,6 +7,7 @@ import { supabase } from "@/src/lib/supabase";
 import { useRouter } from "next/navigation";
 import { Machine } from "@/src/types/machine";
 import { useParams } from "next/navigation";
+import Button from "@/src/components/Button";
 
 export default function EditPage() {
 
@@ -113,6 +114,16 @@ export default function EditPage() {
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-11">
+        <button
+          className="mt-4 px-4 py-2 bg-(--primary) text-white rounded"
+          onClick={finalizeMachine}
+        >
+          Preview
+        </button>
+        <Button variant="border"
+          onClick={addCapsule} >
+          + add capsule
+        </Button>
         <div className="w-78 h-78 mt-33.5
           border-3 border-dashed border-(--primary) 
           rounded-3xl">
@@ -133,25 +144,22 @@ export default function EditPage() {
                   </button>
                 </div>
               ))}
-      </div>
+          </div>
         </div>
-        <button className="w-39 h-39 bg-(--primary)
-          rounded-[100%] text-white text-[50px] cursor-pointer"
-          onClick={addCapsule} >
-          +
-        </button>
-        <button
-          className="mt-4 px-4 py-2 bg-black text-white rounded"
-          onClick={finalizeMachine}
-        >
-          Finalize Machine
-      </button>
       </div>
 
       {activeCapsule && (
         <CapsuleModal
           capsule={activeCapsule}
-          onClose={() => setActiveCapsule(null)}
+          onClose={(hasImages) => {
+            if (!hasImages) {
+              const saved = machine?.capsules.find(c => c.id === activeCapsule?.id);
+              if (!saved || saved.images.length === 0) {
+                deleteCapsule(activeCapsule!.id);
+              }
+            }
+            setActiveCapsule(null);
+          }}
           onSave={(updated) => {
             setMachine(prev => {
               if (!prev) return prev;

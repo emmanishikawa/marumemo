@@ -101,8 +101,9 @@ export default function PreviewPage() {
             </button>
         </div>
 
-        <button onClick={pullCapsule}>
-            Pull Capsule
+        <button onClick={pullCapsule}
+            className="">
+            <img src="/assets/handle.png"/>
         </button>
 
         {current && (

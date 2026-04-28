@@ -2,12 +2,14 @@
 import { useState, useRef } from "react";
 import type { Capsule } from "@/src/types/capsule";
 import Canvas from "./Canvas";
+import Button from "./Button";
 
 type Props = {
     capsule: Capsule;
-    onClose: () => void;
+    onClose: (hasImages: boolean) => void;
     onSave: (updated: Capsule) => void;
 };
+
 
 export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
 
@@ -17,17 +19,6 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
     const [images, setImages] = useState(capsule.images);
 
     const canvasRef = useRef<any>(null);
-    
-    function save() {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const dataUrl = canvas.toDataURL("image/png");
-
-        console.log("saved:", dataUrl);
-
-        setTrinket(dataUrl);
-    }
 
     function handleSave() {
         onSave({
@@ -36,7 +27,7 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
             images,
         });
 
-        onClose();
+        onClose(true);
     }
 
     function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -60,13 +51,13 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
     return (
         <div className="fixed inset-0 flex items-center justify-center
             bg-(--primary)/50 p-4">
-            <div className="bg-white p-6 w-100 rounded-xl">
+            <div className="flex flex-col items-center justify-center bg-white p-6 w-100 rounded-xl">
 
                 <h2 className="text-xl mb-4">Edit Capsule</h2>
 
                 {step === 1 && (
                 <div>
-                    <p>Step 1: Draw Trinket</p>
+                    <p>step 1: draw trinket</p>
 
                     <Canvas
                         initialData={trinket}
@@ -79,14 +70,14 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
                 )}
 
                 {step === 2 && (
-                    <div>
-                        <p>Step 2: Add Images</p>
-                        <button
+                    <div className="w-full">
+                        <p>step 2: add images</p>
+                        <p className="text-[12px]">minimum 1 image</p>
+                        <Button variant="border"
                             onClick={() => document.getElementById("imageUpload")?.click()}
-                            className="border px-3 py-2 rounded"
                             >
-                            + Add Image
-                        </button>
+                            + add image
+                        </Button>
 
                         <div className="max-h-[40vh] overflow-y-auto">
                             <input
@@ -98,46 +89,47 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
                             />
                             {images.map(img => (
                                 <div key={img.id}>
-                                    <img src={img.url} />
+                                    <img src={img.url} className="w-40"/>
                                     <input
                                     value={img.caption || ""}
+                                    placeholder="add description"
                                     onChange={(e) =>
                                         setImages(prev =>
-                                        prev.map(i =>
-                                            i.id === img.id
-                                            ? { ...i, caption: e.target.value }
-                                            : i
-                                        )
+                                            prev.map(i =>
+                                                i.id === img.id
+                                                ? { ...i, caption: e.target.value }
+                                                : i
+                                            )
                                         )
                                     }
                                     />
-                                    <button
+                                    <Button variant="symbol"
                                     onClick={() =>
                                         setImages(prev =>
-                                        prev.filter(i => i.id !== img.id)
+                                            prev.filter(i => i.id !== img.id)
                                         )
                                     }
                                     >
-                                    delete
-                                    </button>
+                                    x
+                                    </Button>
                                 </div>
                             ))}
                         </div>
-                        <button onClick={() => setStep(1)}>
-                            Back
-                        </button>
+                        <Button variant="symbol" onClick={() => setStep(1)}>
+                            ⬅
+                        </Button>
                     </div>
                     
                 )}
 
-                <button onClick={onClose} 
-                    className="mt-4 cursor-pointer">
-                    x
-                </button>
 
-                <button onClick={handleSave}>
-                    v
-                </button>
+                <div className="flex flex-row align-right items-center self-end">
+                    <Button variant="symbol" 
+                        onClick={() => onClose(false)}>x</Button>
+
+                    <Button variant="symbol" onClick={handleSave}
+                        disabled={images.length === 0}>v</Button>
+                </div>
 
             </div>
         </div>

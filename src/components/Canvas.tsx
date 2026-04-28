@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import Button from "./Button";
 
 type Props = {
   width?: number;
@@ -22,6 +23,7 @@ export default function Canvas({
   const color = `hsl(${hue}, 75%, 75%)`;
 
   const history = useRef<ImageData[]>([]);
+  const didPushHistory = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -69,17 +71,18 @@ export default function Canvas({
     ctx.stroke();
   }
 
-    function end() {
-        isDrawing.current = false;
+  function end() {
+    if (!isDrawing.current) return;
+    isDrawing.current = false;
 
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext("2d");
-        if (!canvas || !ctx) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
 
-        history.current.push(
-            ctx.getImageData(0, 0, canvas.width, canvas.height)
-        );
-    }
+    history.current.push(
+      ctx.getImageData(0, 0, canvas.width, canvas.height)
+    );
+  }
 
   function clear() {
     const canvas = canvasRef.current;
@@ -90,22 +93,22 @@ export default function Canvas({
   }
 
   useEffect(() => {
-  if (!initialData) return;
+    if (!initialData) return;
 
-  const canvas = canvasRef.current;
-  if (!canvas) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  const img = new Image();
-  img.src = initialData;
+    const img = new Image();
+    img.src = initialData;
 
-  img.onload = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0);
-  };
-}, [initialData]);
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+    };
+  }, [initialData]);
 
 function undo() {
   const canvas = canvasRef.current;
@@ -126,13 +129,13 @@ function undo() {
   ctx.putImageData(last, 0, 0);
 }
 
-  function save() {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+function save() {
+  const canvas = canvasRef.current;
+  if (!canvas) return;
 
-    const dataUrl = canvas.toDataURL("image/png");
-    onSave?.(dataUrl);
-  }
+  const dataUrl = canvas.toDataURL("image/png");
+  onSave?.(dataUrl);
+}
 
   return (
     <div>
@@ -160,9 +163,9 @@ function undo() {
         />
 
         <div className="flex gap-2 mt-2">
-            <button onClick={clear}>Clear</button>
-            <button onClick={undo}>Undo</button>
-            <button onClick={save}>Save</button>
+            <Button variant="word" onClick={clear}>clear</Button>
+            <Button variant="symbol" onClick={undo}>⟲</Button>
+            <Button variant="symbol" onClick={save}>➝</Button>
         </div>
 
         
