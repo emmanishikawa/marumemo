@@ -76,10 +76,10 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
                         <Button variant="border"
                             onClick={() => document.getElementById("imageUpload")?.click()}
                             >
-                            + add image
+                            + add memory
                         </Button>
 
-                        <div className="max-h-[40vh] overflow-y-auto">
+                        <div className="flex flex-row overflow-x-auto gap-2 pb-2">
                             <input
                                 id="imageUpload"
                                 type="file"
@@ -88,36 +88,35 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
                                 onChange={handleUpload}
                             />
                             {images.map(img => (
-                                <div key={img.id}>
-                                    <img src={img.url} className="w-40"/>
-                                    <input
-                                    value={img.caption || ""}
-                                    placeholder="add description"
-                                    onChange={(e) =>
-                                        setImages(prev =>
-                                            prev.map(i =>
-                                                i.id === img.id
-                                                ? { ...i, caption: e.target.value }
-                                                : i
-                                            )
-                                        )
-                                    }
-                                    />
-                                    <Button variant="symbol"
-                                    onClick={() =>
-                                        setImages(prev =>
-                                            prev.filter(i => i.id !== img.id)
-                                        )
-                                    }
-                                    >
-                                    x
-                                    </Button>
+                                <div key={img.id} className="shrink-0">
+                                    <div className="flex flex-row">
+                                        <div className="w-54 m-2 p-2 rounded border border-(--primary)">
+                                            <img src={img.url} className="w-50" />
+                                            <input
+                                                value={img.caption || ""}
+                                                placeholder="add description"
+                                                onChange={(e) =>
+                                                    setImages(prev =>
+                                                    prev.map(i =>
+                                                        i.id === img.id
+                                                        ? { ...i, caption: e.target.value }
+                                                        : i
+                                                    )
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                        <Button variant="symbol"
+                                            onClick={() =>
+                                            setImages(prev => prev.filter(i => i.id !== img.id))
+                                            }
+                                        >
+                                            x
+                                        </Button>
+                                    </div>
                                 </div>
                             ))}
-                        </div>
-                        <Button variant="symbol" onClick={() => setStep(1)}>
-                            ⬅
-                        </Button>
+                            </div>
                     </div>
                     
                 )}

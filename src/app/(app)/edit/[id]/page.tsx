@@ -93,15 +93,12 @@ export default function EditPage() {
     isFinalized: false,
   };
 
-  console.log("1. Saving machine:", updated);
-
   const { data, error } = await supabase.from("machines").upsert({
     id: updated.id,
     data: updated,
     is_finalized: false,
   });
 
-  console.log("2. Supabase upsert result:", { data, error });
 
   if (error) {
     console.error("SAVE FAILED:", error);
@@ -114,16 +111,18 @@ export default function EditPage() {
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-11">
-        <button
-          className="mt-4 px-4 py-2 bg-(--primary) text-white rounded"
-          onClick={finalizeMachine}
-        >
-          Preview
-        </button>
-        <Button variant="border"
-          onClick={addCapsule} >
-          + add capsule
-        </Button>
+        <div className="w-full flex flex-row items-center justify-center">
+          <Button
+            variant="primary"
+            onClick={finalizeMachine}
+          >
+            Preview
+          </Button>
+          <Button variant="border"
+            onClick={addCapsule} >
+            + add capsule
+          </Button>
+        </div>
         <div className="w-78 h-78 mt-33.5
           border-3 border-dashed border-(--primary) 
           rounded-3xl">
