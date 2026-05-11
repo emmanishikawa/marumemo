@@ -102,7 +102,7 @@ export default function PreviewPage() {
         </div>
 
         <button onClick={pullCapsule}
-            className="">
+            className="mt-107">
             <img src="/assets/handle.png"/>
         </button>
 

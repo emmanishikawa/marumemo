@@ -165,7 +165,7 @@ function save() {
         <div className="flex gap-2 mt-2">
             <Button variant="word" onClick={clear}>clear</Button>
             <Button variant="symbol" onClick={undo}>⟲</Button>
-            <Button variant="symbol" onClick={save}>➝</Button>
+            <Button variant="symbol" onClick={save}>&gt;</Button>
         </div>
 
         

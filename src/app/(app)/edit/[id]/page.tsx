@@ -123,7 +123,7 @@ export default function EditPage() {
             + add capsule
           </Button>
         </div>
-        <div className="w-78 h-78 mt-33.5
+        <div className="w-80 h-80 mt-2
           border-3 border-dashed border-(--primary) 
           rounded-3xl">
             <div className="grid grid-cols-3 ">
@@ -145,6 +145,8 @@ export default function EditPage() {
               ))}
           </div>
         </div>
+        <img src="/assets/handle.png"/>
+        
       </div>
 
       {activeCapsule && (
