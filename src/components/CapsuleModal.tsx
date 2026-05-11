@@ -46,6 +46,8 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
             caption: "",
             },
         ]);
+
+        e.target.value = "";
     }
 
     return (
@@ -71,6 +73,9 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
 
                 {step === 2 && (
                     <div className="w-full">
+                        <Button onClick={() => setStep(1)} 
+                            variant="symbol">
+                                &lt;</Button>
                         <p>step 2: add images</p>
                         <p className="text-[12px]">minimum 1 image</p>
                         <Button variant="border"
