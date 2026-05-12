@@ -36,18 +36,18 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
 
         if (images.length >= 10) return;
 
-        const url = URL.createObjectURL(file);
-
-        setImages(prev => [
-            ...prev,
-            {
-            id: crypto.randomUUID(),
-            url,
-            caption: "",
-            },
-        ]);
-
-        e.target.value = "";
+        const reader = new FileReader();
+        reader.onload = () => {
+            setImages(prev => [
+                ...prev,
+                {
+                    id: crypto.randomUUID(),
+                    url: reader.result as string, // base64 data URL
+                    caption: "",
+                },
+            ]);
+        };
+        reader.readAsDataURL(file);
     }
 
     return (
