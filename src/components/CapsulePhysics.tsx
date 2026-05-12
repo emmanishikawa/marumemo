@@ -4,19 +4,19 @@ import { Capsule } from "@/src/types/capsule";
 
 type Props = {
     capsules: Capsule[];
-    motionPermission: boolean;
 };
 
-export default function CapsulePhysics({ capsules, motionPermission }: Props) {
+export default function CapsulePhysics({ capsules }: Props) {
     const sceneRef = useRef<HTMLDivElement>(null);
     const engineRef = useRef<any>(null);
+    const bodiesRef = useRef<any[]>([]);
 
     useEffect(() => {
         if (!sceneRef.current) return;
 
         async function init() {
             const Matter = await import("matter-js");
-            const { Engine, Render, Runner, Bodies, World } = Matter;
+            const { Engine, Render, Runner, Bodies, World, Body } = Matter;
 
             const width = sceneRef.current!.clientWidth;
             const height = sceneRef.current!.clientHeight;
@@ -43,8 +43,8 @@ export default function CapsulePhysics({ capsules, motionPermission }: Props) {
                 const x = Math.random() * (width - 60) + 30;
                 const y = Math.random() * -200 - 40;
                 return Bodies.circle(x, y, 28, {
-                    restitution: 0.4,
-                    friction: 0.5,
+                    restitution: 0.5,
+                    friction: 0.3,
                     render: {
                         sprite: {
                             texture: c.capsuleImage || "/capsules/1.png",
@@ -55,27 +55,45 @@ export default function CapsulePhysics({ capsules, motionPermission }: Props) {
                 });
             });
 
+            bodiesRef.current = capsuleBodies;
             World.add(engine.world, [floor, wallL, wallR, ...capsuleBodies]);
             Render.run(render);
             const runner = Runner.create();
             Runner.run(runner, engine);
 
-            function handleMouseMove(e: MouseEvent) {
+            function applyForce(e: MouseEvent | TouchEvent) {
                 const rect = sceneRef.current!.getBoundingClientRect();
-                const cx = rect.left + rect.width / 2;
-                const cy = rect.top + rect.height / 2;
-                engine.gravity.x = ((e.clientX - cx) / rect.width) * 0.8;
-                engine.gravity.y = ((e.clientY - cy) / rect.height) * 0.8 + 0.8;
+                const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+                const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+                const tapX = clientX - rect.left;
+                const tapY = clientY - rect.top;
+
+                bodiesRef.current.forEach((body) => {
+                    const dx = body.position.x - tapX;
+                    const dy = body.position.y - tapY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxDist = 120;
+
+                    if (dist < maxDist) {
+                        const strength = (1 - dist / maxDist) * 0.005;
+                        Body.applyForce(body, body.position, {
+                            x: (dx / dist) * strength,
+                            y: (dy / dist) * strength,
+                        });
+                    }
+                });
             }
 
-            window.addEventListener("mousemove", handleMouseMove);
+            sceneRef.current!.addEventListener("mousedown", applyForce);
+            sceneRef.current!.addEventListener("touchstart", applyForce);
 
             return () => {
                 Render.stop(render);
                 Runner.stop(runner);
                 Engine.clear(engine);
                 render.canvas.remove();
-                window.removeEventListener("mousemove", handleMouseMove);
+                sceneRef.current?.removeEventListener("mousedown", applyForce);
+                sceneRef.current?.removeEventListener("touchstart", applyForce);
             };
         }
 
@@ -83,25 +101,10 @@ export default function CapsulePhysics({ capsules, motionPermission }: Props) {
         return () => { cleanup.then(fn => fn?.()); };
     }, [capsules]);
 
-    useEffect(() => {
-        if (!motionPermission) return;
-
-        function handleTilt(e: DeviceMotionEvent) {
-            if (!engineRef.current) return;
-            const x = e.accelerationIncludingGravity?.x ?? 0;
-            const y = e.accelerationIncludingGravity?.y ?? 0;
-            engineRef.current.gravity.x = -x * 0.1;
-            engineRef.current.gravity.y = y * 0.1;
-        }
-
-        window.addEventListener("devicemotion", handleTilt);
-        return () => window.removeEventListener("devicemotion", handleTilt);
-    }, [motionPermission]);
-
     return (
         <div
             ref={sceneRef}
-            className="w-80 h-80 mt-13 overflow-visible"
+            className="w-80 h-80 mt-13 overflow-hidden rounded-3xl"
         />
     );
 }

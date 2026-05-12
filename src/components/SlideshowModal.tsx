@@ -72,7 +72,7 @@ export default function SlideshowModal({ capsule, onClose }: Props) {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-(--primary)/50 p-4">
             <div className="flex flex-col items-center bg-white p-6 w-80 rounded-xl gap-4">
-                <button onClick={onClose} className="self-end">x</button>
+                <button onClick={onClose} className="self-end bg-(--primary) w-5 rounded-sm text-white">x</button>
 
                 {/* slide viewport */}
                 <div className="w-64 h-64 overflow-hidden relative"
@@ -107,7 +107,7 @@ export default function SlideshowModal({ capsule, onClose }: Props) {
                             <span
                                 key={i}
                                 onClick={() => setIndex(i)}
-                                className={`text-lg cursor-pointer transition-all ${
+                                className={`text-lg cursor-pointer transition-all font-sans ${
                                     index === 0 ? "text-(--primary)" : "text-gray-300"
                                 }`}
                             >★</span>

@@ -114,16 +114,13 @@ export default function PreviewPage() {
             </Button>
         </div>
 
-        <CapsulePhysics 
-            capsules={machine.capsules} 
-            motionPermission={motionPermission}
-        />
+        <CapsulePhysics capsules={machine.capsules} />
   
         <button onClick={async () => {
             if (!motionPermission) await requestMotionPermission();
             pullCapsule();
         }}>
-            <img src="/assets/handle.png"/>
+            <img className="mt-14" src="/assets/handle.png"/>
         </button>
 
         {current && (
