@@ -9,6 +9,19 @@ import { Machine } from "@/src/types/machine";
 import { useParams } from "next/navigation";
 import Button from "@/src/components/Button";
 
+const CAPSULE_IMAGES = [
+  "/assets/capsules/cap-1.png",
+  "/assets/capsules/cap-2.png",
+  "/assets/capsules/cap-3.png",
+  "/assets/capsules/cap-4.png",
+  "/assets/capsules/cap-5.png",
+  "/assets/capsules/cap-6.png",
+  "/assets/capsules/cap-7.png",
+  "/assets/capsules/cap-8.png",
+  "/assets/capsules/cap-9.png",
+  "/assets/capsules/cap-10.png",
+];
+
 export default function EditPage() {
 
 
@@ -56,10 +69,14 @@ export default function EditPage() {
   function addCapsule() {
     if (!machine || machine.capsules.length >= 9) return;
 
+    const randomImage = CAPSULE_IMAGES[Math.floor(Math.random() * CAPSULE_IMAGES.length)];
+
+
     const newCapsule: Capsule = {
       id: crypto.randomUUID(),
       trinket: "",
       images: [],
+      capsuleImage: randomImage,
     };
 
     setMachine(prev => {
@@ -128,19 +145,19 @@ export default function EditPage() {
           rounded-3xl">
             <div className="grid grid-cols-3 ">
               {machine.capsules.map(capsule => (
-                <div key={capsule.id} className="border p-2">
-                      <div
-                        key={capsule.id}
-                        className="border p-4 cursor-pointer"
-                        onClick={() => setActiveCapsule(capsule)}
-                      >
-                        <p>Capsule</p>
-                      </div>
-
-                  <button className="cursor-pointer"
+                <div key={capsule.id} className="border p-1">
+                  <button className="w-5 h-5 rounded-sm cursor-pointer bg-(--primary) text-white"
                     onClick={() => deleteCapsule(capsule.id)}>
                     x
                   </button>
+                  <div
+                    key={capsule.id}
+                    className="cursor-pointer border"
+                    onClick={() => setActiveCapsule(capsule)}
+                  >
+                    <img src={capsule.capsuleImage} 
+                      className="w-full h-full object-fill" />
+                  </div>
                 </div>
               ))}
           </div>

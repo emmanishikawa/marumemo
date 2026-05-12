@@ -6,4 +6,5 @@ export type Capsule = {
         url: string;
         caption?: string;
     }[];
+    capsuleImage: string;
 };

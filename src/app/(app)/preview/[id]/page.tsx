@@ -6,6 +6,8 @@ import { Capsule } from "@/src/types/capsule";
 import { useParams } from "next/navigation";
 import { supabase } from "@/src/lib/supabase";
 import SlideshowModal from "@/src/components/SlideshowModal";
+import Button from "@/src/components/Button";
+import CapsulePhysics from "@/src/components/CapsulePhysics";
 
 export default function PreviewPage() {
     const [machine, setMachine] = useState<Machine | null>(null);
@@ -90,20 +92,20 @@ export default function PreviewPage() {
 
     return (
     <div className="flex flex-col items-center justify-center">
-        <h1>Preview</h1>
-        
         <div className="flex flex-row items-center justify-center">
-            <button onClick={() => router.push(`/edit/${id}`)}>
+            <Button variant="word" onClick={() => router.push(`/edit/${id}`)}>
                 Edit
-            </button>
+            </Button>
             
-            <button onClick={finalizeMachine}>
+            <Button variant="primary" onClick={finalizeMachine}>
                 Finish & Share
-            </button>
+            </Button>
         </div>
 
+        <CapsulePhysics capsules={machine.capsules} />
+  
         <button onClick={pullCapsule}
-            className="mt-107">
+            className="mt-14">
             <img src="/assets/handle.png"/>
         </button>
 
