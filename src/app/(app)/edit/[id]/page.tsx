@@ -145,7 +145,7 @@ export default function EditPage() {
               ))}
           </div>
         </div>
-        <img src="/assets/handle.png"/>
+        <img className="mt-3" src="/assets/handle.png"/>
         
       </div>
 

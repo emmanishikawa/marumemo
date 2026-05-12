@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Capsule } from "@/src/types/capsule";
 import { useParams } from "next/navigation";
 import { supabase } from "@/src/lib/supabase";
+import SlideshowModal from "@/src/components/SlideshowModal";
 
 export default function PreviewPage() {
     const [machine, setMachine] = useState<Machine | null>(null);
@@ -107,7 +108,10 @@ export default function PreviewPage() {
         </button>
 
         {current && (
-            <img src={current.trinket} />
+            <SlideshowModal 
+                capsule={current}
+                onClose={() => setCurrent(null)}    
+            />            
         )}
 
         {showShare && 
