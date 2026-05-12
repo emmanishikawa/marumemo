@@ -21,6 +21,9 @@ export default function PreviewPage() {
     const params = useParams();
     const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
+    const [motionPermission, setMotionPermission] = useState(false);
+
+
     useEffect(() => {
         async function load() {
         if (!id) return;
@@ -90,6 +93,15 @@ export default function PreviewPage() {
         navigator.clipboard.writeText(`${window.location.origin}/share/${id}`);
     }
 
+    async function requestMotionPermission() {
+        if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
+            const permission = await (DeviceMotionEvent as any).requestPermission();
+            if (permission === "granted") setMotionPermission(true);
+        } else {
+            setMotionPermission(true);
+        }
+    }
+
     return (
     <div className="flex flex-col items-center justify-center">
         <div className="flex flex-row items-center justify-center">
@@ -102,10 +114,15 @@ export default function PreviewPage() {
             </Button>
         </div>
 
-        <CapsulePhysics capsules={machine.capsules} />
+        <CapsulePhysics 
+            capsules={machine.capsules} 
+            motionPermission={motionPermission}
+        />
   
-        <button onClick={pullCapsule}
-            className="mt-14">
+        <button onClick={async () => {
+            if (!motionPermission) await requestMotionPermission();
+            pullCapsule();
+        }}>
             <img src="/assets/handle.png"/>
         </button>
 

@@ -4,9 +4,10 @@ import { Capsule } from "@/src/types/capsule";
 
 type Props = {
     capsules: Capsule[];
+    motionPermission: boolean;
 };
 
-export default function CapsulePhysics({ capsules }: Props) {
+export default function CapsulePhysics({ capsules, motionPermission }: Props) {
     const sceneRef = useRef<HTMLDivElement>(null);
     const engineRef = useRef<any>(null);
 
@@ -15,7 +16,7 @@ export default function CapsulePhysics({ capsules }: Props) {
 
         async function init() {
             const Matter = await import("matter-js");
-            const { Engine, Render, Runner, Bodies, Body, World, Events } = Matter;
+            const { Engine, Render, Runner, Bodies, World } = Matter;
 
             const width = sceneRef.current!.clientWidth;
             const height = sceneRef.current!.clientHeight;
@@ -34,44 +35,31 @@ export default function CapsulePhysics({ capsules }: Props) {
                 },
             });
 
-            // walls
             const floor = Bodies.rectangle(width / 2, height + 25, width, 50, { isStatic: true, render: { fillStyle: "transparent" } });
             const wallL = Bodies.rectangle(-25, height / 2, 50, height, { isStatic: true, render: { fillStyle: "transparent" } });
             const wallR = Bodies.rectangle(width + 25, height / 2, 50, height, { isStatic: true, render: { fillStyle: "transparent" } });
 
-            // capsule bodies with images
             const capsuleBodies = capsules.map((c) => {
                 const x = Math.random() * (width - 60) + 30;
                 const y = Math.random() * -200 - 40;
-                const body = Bodies.circle(x, y, 28, {
+                return Bodies.circle(x, y, 28, {
                     restitution: 0.4,
                     friction: 0.5,
                     render: {
                         sprite: {
                             texture: c.capsuleImage || "/capsules/1.png",
-                            xScale: 0.8,
-                            yScale: 0.8,
+                            xScale: 1,
+                            yScale: 1,
                         },
                     },
                 });
-                return body;
             });
 
             World.add(engine.world, [floor, wallL, wallR, ...capsuleBodies]);
-
             Render.run(render);
             const runner = Runner.create();
             Runner.run(runner, engine);
 
-            // device tilt
-            function handleTilt(e: DeviceMotionEvent) {
-                const x = e.accelerationIncludingGravity?.x ?? 0;
-                const y = e.accelerationIncludingGravity?.y ?? 0;
-                engine.gravity.x = -x * 0.1;
-                engine.gravity.y = y * 0.1;
-            }
-
-            // mouse/trackpad gravity shift on desktop
             function handleMouseMove(e: MouseEvent) {
                 const rect = sceneRef.current!.getBoundingClientRect();
                 const cx = rect.left + rect.width / 2;
@@ -80,7 +68,6 @@ export default function CapsulePhysics({ capsules }: Props) {
                 engine.gravity.y = ((e.clientY - cy) / rect.height) * 0.8 + 0.8;
             }
 
-            window.addEventListener("devicemotion", handleTilt);
             window.addEventListener("mousemove", handleMouseMove);
 
             return () => {
@@ -88,7 +75,6 @@ export default function CapsulePhysics({ capsules }: Props) {
                 Runner.stop(runner);
                 Engine.clear(engine);
                 render.canvas.remove();
-                window.removeEventListener("devicemotion", handleTilt);
                 window.removeEventListener("mousemove", handleMouseMove);
             };
         }
@@ -96,6 +82,21 @@ export default function CapsulePhysics({ capsules }: Props) {
         const cleanup = init();
         return () => { cleanup.then(fn => fn?.()); };
     }, [capsules]);
+
+    useEffect(() => {
+        if (!motionPermission) return;
+
+        function handleTilt(e: DeviceMotionEvent) {
+            if (!engineRef.current) return;
+            const x = e.accelerationIncludingGravity?.x ?? 0;
+            const y = e.accelerationIncludingGravity?.y ?? 0;
+            engineRef.current.gravity.x = -x * 0.1;
+            engineRef.current.gravity.y = y * 0.1;
+        }
+
+        window.addEventListener("devicemotion", handleTilt);
+        return () => window.removeEventListener("devicemotion", handleTilt);
+    }, [motionPermission]);
 
     return (
         <div
