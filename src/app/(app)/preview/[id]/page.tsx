@@ -95,11 +95,11 @@ export default function PreviewPage() {
     <div className="flex flex-col items-center justify-center gap-3">
         <div className="flex flex-row items-center justify-center">
             <Button variant="word" onClick={() => router.push(`/edit/${id}`)}>
-                Edit
+                edit
             </Button>
             
             <Button variant="primary" onClick={finalizeMachine}>
-                Finish & Share
+                finish & share
             </Button>
         </div>
 
