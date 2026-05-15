@@ -32,10 +32,9 @@ export default function Home() {
   return (
     <>
     <main className="flex flex-col items-center justify-start h-full">
-      {/* title group */}
-      <div className="flex flex-col justify-center items-center">
-        <h1 className="text-center text-[40px] tracking-[0.3em] pl-[0.3em]">marumemo</h1>
-        <h2 className="text-center text-[20px] tracking-[3em] pl-[3em]">マルメモ</h2>
+
+      <div className="h-full w-80 mt-6">
+        <img className="object-contain" src="/assets/logo.png"/>
       </div>
 
       {/* create button */}
