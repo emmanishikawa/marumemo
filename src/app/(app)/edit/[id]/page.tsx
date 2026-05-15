@@ -29,6 +29,8 @@ export default function EditPage() {
   const params = useParams();
   const id = params.id;
 
+  const [saving, setSaving] = useState(false);
+
   const [activeCapsule, setActiveCapsule] = useState<Capsule | null>(null);
   const [machine, setMachine] = useState<Machine | null>(null);
 
@@ -103,37 +105,36 @@ export default function EditPage() {
   }
 
   async function finalizeMachine() {
-  if (!machine) return;
+      if (!machine) return;
+      setSaving(true);  // immediate feedback
 
-  const updated = {
-    ...machine,
-    isFinalized: false,
-  };
+      const updated = { ...machine, isFinalized: false };
 
-  const { data, error } = await supabase.from("machines").upsert({
-    id: updated.id,
-    data: updated,
-    is_finalized: false,
-  });
+      const { error } = await supabase.from("machines").upsert({
+          id: updated.id,
+          data: updated,
+          is_finalized: false,
+      });
 
+      if (error) {
+          console.error("SAVE FAILED:", error);
+          setSaving(false);
+          return;
+      }
 
-  if (error) {
-    console.error("SAVE FAILED:", error);
-    return;
+      router.push(`/preview/${updated.id}`);
   }
-
-  router.push(`/preview/${updated.id}`);
-}
 
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-11">
         <div className="w-full flex flex-row items-center justify-center">
           <Button
-            variant="primary"
-            onClick={finalizeMachine}
+              variant="primary"
+              onClick={finalizeMachine}
+              disabled={saving}
           >
-            Preview
+              {saving ? "loading..." : "preview"}
           </Button>
           <Button variant="border"
             onClick={addCapsule} >
