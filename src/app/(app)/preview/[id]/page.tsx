@@ -125,26 +125,18 @@ export default function PreviewPage() {
         {showShare && 
             (<div className="fixed inset-0 flex items-center justify-center
             bg-(--primary)/50 p-4">
-                <div className="bg-white p-6 w-100 rounded-xl">
-                    <p className="text-sm text-center text-(--primary)">share this link</p>
-                    <input
-                        readOnly
-                        value={`${window.location.origin}/share/${id}`}
-                        className="border rounded-lg p-2 text-sm w-full"
-                    />
-                    <button
-                        onClick={() => navigator.clipboard
-                                .writeText(`${window.location.origin}/share/${id}`)}
-                        className="bg-(--primary) text-white rounded-lg 
-                            py-2 touch-manipulation active:scale-95 transition-all"
-                    >
-                        copy link
-                    </button>
-                    <button
-                        onClick={() => setShowShare(false)}
-                        className="text-sm text-gray-400"
-                    >
-                        close
+                <div className="flex flex-col items-center justify-center gap-[2vw]">
+                    <div className="flex flex-row items-center justify-center">
+                        <Button variant="word" onClick={() => router.push(`/edit/${id}`)}>Edit</Button>
+                        <Button variant="primary" onClick={finalizeMachine}>Finish & Share</Button>
+                    </div>
+
+                    <div style={{ marginTop: "-min(28px, 7vw)" }}>
+                        <CapsulePhysics capsules={machine.capsules} />
+                    </div>
+
+                    <button onClick={pullCapsule}>
+                        <img style={{ width: "min(120px, 30vw)" }} src="/assets/handle.png" />
                     </button>
                 </div>
             </div>)}

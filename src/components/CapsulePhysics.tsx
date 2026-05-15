@@ -104,7 +104,8 @@ export default function CapsulePhysics({ capsules }: Props) {
     return (
         <div
             ref={sceneRef}
-            className="w-80 h-80 mt-13 overflow-hidden rounded-3xl"
+            style={{ width: "min(320px, 85vw)", height: "min(320px, 85vw)" }}
+            className="mt-13 overflow-hidden rounded-3xl"
         />
     );
 }
