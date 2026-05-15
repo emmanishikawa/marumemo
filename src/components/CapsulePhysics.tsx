@@ -21,7 +21,9 @@ export default function CapsulePhysics({ capsules }: Props) {
             const width = sceneRef.current!.clientWidth;
             const height = sceneRef.current!.clientHeight;
 
-            const engine = Engine.create();
+            const engine = Engine.create({
+                gravity: { x: 0, y: 0.15 }
+            });
             engineRef.current = engine;
 
             const render = Render.create({
@@ -38,13 +40,18 @@ export default function CapsulePhysics({ capsules }: Props) {
             const floor = Bodies.rectangle(width / 2, height + 25, width, 50, { isStatic: true, render: { fillStyle: "transparent" } });
             const wallL = Bodies.rectangle(-25, height / 2, 50, height, { isStatic: true, render: { fillStyle: "transparent" } });
             const wallR = Bodies.rectangle(width + 25, height / 2, 50, height, { isStatic: true, render: { fillStyle: "transparent" } });
+            const ceiling = Bodies.rectangle(width / 2, -25, width, 50, { 
+                isStatic: true, 
+                restitution: 0.8,
+                render: { fillStyle: "transparent" } 
+            });
 
             const capsuleBodies = capsules.map((c) => {
                 const x = Math.random() * (width - 60) + 30;
-                const y = Math.random() * -200 - 40;
+                const y = Math.random() * (height - 60) + 30;
                 return Bodies.circle(x, y, 28, {
-                    restitution: 0.5,
-                    friction: 0.3,
+                    restitution: 0.8,
+                    friction: 0.1,
                     render: {
                         sprite: {
                             texture: c.capsuleImage || "/capsules/1.png",
@@ -56,7 +63,7 @@ export default function CapsulePhysics({ capsules }: Props) {
             });
 
             bodiesRef.current = capsuleBodies;
-            World.add(engine.world, [floor, wallL, wallR, ...capsuleBodies]);
+            World.add(engine.world, [floor, wallL, wallR, ceiling, ...capsuleBodies]);
             Render.run(render);
             const runner = Runner.create();
             Runner.run(runner, engine);
@@ -75,7 +82,7 @@ export default function CapsulePhysics({ capsules }: Props) {
                     const maxDist = 120;
 
                     if (dist < maxDist) {
-                        const strength = (1 - dist / maxDist) * 0.005;
+                        const strength = (1 - dist / maxDist) * 0.1;
                         Body.applyForce(body, body.position, {
                             x: (dx / dist) * strength,
                             y: (dy / dist) * strength,

@@ -136,7 +136,7 @@ export default function PreviewPage() {
                         className="bg-(--primary) text-white rounded-lg 
                             py-2 touch-manipulation active:scale-95 transition-all"
                     >
-                        copy link
+                        copy
                     </button>
                     <button
                         onClick={() => setShowShare(false)}
