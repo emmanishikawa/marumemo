@@ -10,7 +10,6 @@ import CapsulePhysics from "@/src/components/CapsulePhysics";
 
 export default function PreviewPage() {
     const [machine, setMachine] = useState<Machine | null>(null);
-
     const [remaining, setRemaining] = useState<Capsule[]>([]);
     const [current, setCurrent] = useState<Capsule | null>(null);
 
@@ -67,15 +66,17 @@ export default function PreviewPage() {
         );
     }
 
+    
+
     return (
-    <div className="flex flex-col items-center justify-center mt-12">
+    <div className="flex flex-col items-center justify-center gap-3 mt-15">
 
         <CapsulePhysics capsules={machine.capsules} />
   
         <button onClick={async () => {
             pullCapsule();
-        }}>
-            <img className="mt-14" src="/assets/handle.png"/>
+        }}> 
+            <img className="mt-8 glow-pulse overflow-visible" src="/assets/handle.png"/> {/** handle */}
         </button>
 
         {current && (

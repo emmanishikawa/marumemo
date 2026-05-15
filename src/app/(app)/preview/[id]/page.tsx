@@ -21,9 +21,6 @@ export default function PreviewPage() {
     const params = useParams();
     const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
-    const [motionPermission, setMotionPermission] = useState(false);
-
-
     useEffect(() => {
         async function load() {
         if (!id) return;
@@ -109,8 +106,8 @@ export default function PreviewPage() {
   
         <button onClick={async () => {
             pullCapsule();
-        }}>
-            <img className="mt-8" src="/assets/handle.png"/>
+        }}> 
+            <img className="mt-8 glow-pulse overflow-visible" src="/assets/handle.png"/> {/** handle */}
         </button>
 
         {current && (
@@ -130,14 +127,13 @@ export default function PreviewPage() {
                         value={`${window.location.origin}/share/${id}`}
                         className="border rounded-lg p-2 text-sm w-full"
                     />
-                    <button
+                    <Button
                         onClick={() => navigator.clipboard
                                 .writeText(`${window.location.origin}/share/${id}`)}
-                        className="bg-(--primary) text-white rounded-lg 
-                            py-2 touch-manipulation active:scale-95 transition-all"
+                        variant="primary"
                     >
                         copy
-                    </button>
+                    </Button>
                     <button
                         onClick={() => setShowShare(false)}
                         className="text-sm text-gray-400"

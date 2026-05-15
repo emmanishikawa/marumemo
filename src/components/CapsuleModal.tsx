@@ -18,8 +18,6 @@ export default function CapsuleModal({ capsule, onClose, onSave }: Props) {
     const [trinket, setTrinket] = useState(capsule.trinket);
     const [images, setImages] = useState(capsule.images);
 
-    const canvasRef = useRef<any>(null);
-
     function handleSave() {
         onSave({
             ...capsule,
