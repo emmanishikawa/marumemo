@@ -105,14 +105,12 @@ export default function PreviewPage() {
             </Button>
         </div>
 
-        <div className="-mt-7">
-            <CapsulePhysics capsules={machine.capsules} />
-        </div>
+        <CapsulePhysics capsules={machine.capsules} />
   
         <button onClick={async () => {
             pullCapsule();
         }}>
-            <img className="mt-7" src="/assets/handle.png"/>
+            <img className="mt-8" src="/assets/handle.png"/>
         </button>
 
         {current && (
