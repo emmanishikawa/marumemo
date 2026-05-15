@@ -94,7 +94,7 @@ export default function PreviewPage() {
     }
 
     return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center gap-3">
         <div className="flex flex-row items-center justify-center">
             <Button variant="word" onClick={() => router.push(`/edit/${id}`)}>
                 Edit
@@ -105,12 +105,14 @@ export default function PreviewPage() {
             </Button>
         </div>
 
-        <CapsulePhysics capsules={machine.capsules} />
+        <div className="-mt-7">
+            <CapsulePhysics capsules={machine.capsules} />
+        </div>
   
         <button onClick={async () => {
             pullCapsule();
         }}>
-            <img className="mt-14" src="/assets/handle.png"/>
+            <img className="mt-7" src="/assets/handle.png"/>
         </button>
 
         {current && (
