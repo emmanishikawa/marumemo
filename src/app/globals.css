@@ -29,6 +29,7 @@ body {
   font-family: Kodomo;
   scrollbar-width: none;
   overflow: hidden;
+  overscroll-behavior: none;
 
   -webkit-user-select: none;
   -ms-user-select: none;
