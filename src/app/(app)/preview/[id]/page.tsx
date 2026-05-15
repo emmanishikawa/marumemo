@@ -17,6 +17,7 @@ export default function PreviewPage() {
     const [current, setCurrent] = useState<Capsule | null>(null);
 
     const [showShare, setShowShare] = useState(false);
+    const [sharing, setSharing] = useState(false);
     
     const params = useParams();
     const id = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -72,6 +73,7 @@ export default function PreviewPage() {
 
     async function finalizeMachine() {
         if (!machine) return;
+        setSharing(true);
 
         const updated = { ...machine, isFinalized: true };
 
@@ -83,11 +85,13 @@ export default function PreviewPage() {
 
         if (error) {
             console.error("Failed to finalize:", error);
+            setSharing(false);
             return;
         }
 
         setMachine(updated);
         setShowShare(true);
+        setSharing(false);
         navigator.clipboard.writeText(`${window.location.origin}/share/${id}`);
     }
 
@@ -98,8 +102,8 @@ export default function PreviewPage() {
                 edit
             </Button>
             
-            <Button variant="primary" onClick={finalizeMachine}>
-                finish & share
+            <Button variant="primary" onClick={finalizeMachine} disabled={sharing}>
+                {sharing ? "loading..." : "finish & share"}
             </Button>
         </div>
 
