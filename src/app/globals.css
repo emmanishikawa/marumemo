@@ -11,6 +11,11 @@
   src: url('/fonts/KodomoRounded.otf') format('opentype');
 }
 
+@font-face {
+  font-family: 'Gamja';
+  src: url('/fonts/GamjaFlower.ttf') format('truetype');
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #D9F0FF;

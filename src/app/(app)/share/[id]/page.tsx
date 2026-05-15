@@ -5,41 +5,40 @@ import { useRouter } from "next/navigation";
 import { Capsule } from "@/src/types/capsule";
 import { useParams } from "next/navigation";
 import { supabase } from "@/src/lib/supabase";
+import SlideshowModal from "@/src/components/SlideshowModal";
+import CapsulePhysics from "@/src/components/CapsulePhysics";
 
-export default function SharePage() {
+export default function PreviewPage() {
     const [machine, setMachine] = useState<Machine | null>(null);
-    const router = useRouter();
 
     const [remaining, setRemaining] = useState<Capsule[]>([]);
     const [current, setCurrent] = useState<Capsule | null>(null);
 
+    const [showShare, setShowShare] = useState(false);
     
     const params = useParams();
     const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
     useEffect(() => {
-    async function load() {
-    if (!id) return;
+        async function load() {
+        if (!id) return;
 
-    console.log("3. Loading machine with id:", id);
+        const { data, error } = await supabase
+            .from("machines")
+            .select("*")
+            .eq("id", id)
+            .single();
 
-    const { data, error } = await supabase
-        .from("machines")
-        .select("*")
-        .eq("id", id)
-        .single();
+            if (error) {
+                console.error("LOAD ERROR:", error);
+                return;
+            }
 
-    if (error) {
-        console.error("LOAD ERROR:", error);
-        return;
-    }
-
-    if (data?.data) {
-        setMachine(data.data);
-    }
-}
-
-    load();
+            if (data?.data) {
+                setMachine(data.data);
+            }
+        }
+        load();
     }, [id]);
 
     useEffect(() => {
@@ -48,7 +47,7 @@ export default function SharePage() {
     }
     }, [machine]);
 
-    if (!machine) return <p>Loading...</p>;
+    if (!machine) return <p>loading</p>;
 
     function pullCapsule() {
         if (!machine) return;
@@ -69,14 +68,23 @@ export default function SharePage() {
     }
 
     return (
-    <div>
-        <button onClick={pullCapsule}>
-            Pull Capsule
+    <div className="flex flex-col items-center justify-center mt-12">
+
+        <CapsulePhysics capsules={machine.capsules} />
+  
+        <button onClick={async () => {
+            pullCapsule();
+        }}>
+            <img className="mt-14" src="/assets/handle.png"/>
         </button>
 
         {current && (
-            <img src={current.trinket} />
+            <SlideshowModal 
+                capsule={current}
+                onClose={() => setCurrent(null)}    
+            />            
         )}
+
     </div>
     );
 }

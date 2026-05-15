@@ -93,15 +93,6 @@ export default function PreviewPage() {
         navigator.clipboard.writeText(`${window.location.origin}/share/${id}`);
     }
 
-    async function requestMotionPermission() {
-        if (typeof (DeviceMotionEvent as any).requestPermission === "function") {
-            const permission = await (DeviceMotionEvent as any).requestPermission();
-            if (permission === "granted") setMotionPermission(true);
-        } else {
-            setMotionPermission(true);
-        }
-    }
-
     return (
     <div className="flex flex-col items-center justify-center">
         <div className="flex flex-row items-center justify-center">
@@ -117,7 +108,6 @@ export default function PreviewPage() {
         <CapsulePhysics capsules={machine.capsules} />
   
         <button onClick={async () => {
-            if (!motionPermission) await requestMotionPermission();
             pullCapsule();
         }}>
             <img className="mt-14" src="/assets/handle.png"/>
